@@ -1,5 +1,5 @@
-## CC
-This is the back-end part of CC, which is hosted [here](https://cc.nightori.ru)
+## cc.nightori.ru
+This is the back-end part of CC, which is hosted [here](https://cc.nightori.ru).
 This is a small and nice link shortener with the following features:
  - No registration!
  - No captcha!
