@@ -1,5 +1,6 @@
 package ru.nightori.cc.config;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = {
 			RollbackException.class,
 			ConstraintViolationException.class,
-			IllegalHeaderException.class
+			IllegalHeaderException.class,
+			DataIntegrityViolationException.class
 	})
 	protected ResponseEntity<Object> handleValidationError(RuntimeException ex, WebRequest request) {
 		String msg = "invalid request";
