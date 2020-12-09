@@ -16,13 +16,12 @@ User features:
  - Regex validation for all incoming data
 
 ## Dependencies
-This application is built with [Spring Framework](https://spring.io/projects/spring-framework). The following modules are used:
-- Spring Boot
+This application is built with [Spring Boot](https://spring.io/projects/spring-boot). The following modules are used:
 - Spring Web
 - Spring Data JPA
-- Spring Validation
 - Spring Security
-- Spring Cache
+- Validation
+- Spring cache abstraction
 
 The data is stored in a MySQL database, so [JDBC Driver for MySQL](https://www.mysql.com/products/connector/) is used for connection.
 
