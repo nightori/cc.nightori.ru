@@ -22,10 +22,13 @@ This application is built with [Spring Boot](https://spring.io/projects/spring-b
 - Spring Security
 - Validation
 - Spring cache abstraction
+- Testing
 
 The data is stored in a MySQL database, so [JDBC Driver for MySQL](https://www.mysql.com/products/connector/) is used for connection.
 
 [Ehcache](https://www.ehcache.org/documentation/3.0/107.html) is used as a JCache provider.
+
+[H2](https://www.h2database.com/html/main.html) is used as an in-memory database for testing purposes.
 
 ## Running it yourself
 Use Gradle to run or build this, it's a regular Spring Boot application. You will also need to set the required env variables.
