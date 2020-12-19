@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.nightori.cc.config.Config.APP_DOMAIN;
+import static ru.nightori.cc.config.Config.RESERVED_URLS;
 
 @WebMvcTest(RedirectController.class)
 class WebLayerTests {
@@ -56,12 +57,27 @@ class WebLayerTests {
     }
 
     @Test
-    void urlRedirectTest() throws Exception {
+    void urlRedirectTestSuccess() throws Exception {
         String expectedURL = "https://example.com";
         when(mockedClientService.getRedirectUrl(anyString())).thenReturn(expectedURL);
 
         mockMvc.perform(get("/randomUrl"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", expectedURL));
+    }
+
+    @Test
+    void urlRedirectTestReserved() throws Exception {
+        String reservedUrl = "/" + RESERVED_URLS.get(0);
+        mockMvc.perform(get(reservedUrl)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void illegalHeaderTest() throws Exception {
+        mockMvc.perform(delete("/api")
+                .param("shortUrl", "google")
+                .param("password", "12345")
+                .header("x-forwarded-for", "127.0.0.1"))
+                .andExpect(status().isBadRequest());
     }
 }
