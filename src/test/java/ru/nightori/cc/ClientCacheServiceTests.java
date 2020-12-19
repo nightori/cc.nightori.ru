@@ -6,7 +6,7 @@ import ru.nightori.cc.exception.LimitExceededException;
 import static org.junit.jupiter.api.Assertions.*;
 
 // not annotated, we don't need Spring context for this
-class ClientCacheServiceTest {
+class ClientCacheServiceTests {
     ClientCacheService service;
 
     @BeforeEach
