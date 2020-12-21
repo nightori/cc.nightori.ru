@@ -1,5 +1,6 @@
 package ru.nightori.cc;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -107,11 +108,9 @@ class RedirectServiceTests {
         assertEquals("/home", destination);
     }
 
-    @Test
+    @RepeatedTest(10)
     void generateRandomUrlTests() {
-        for (int i = 0; i < 10; i++) {
-            String url = service.generateRandomUrl();
-            assertTrue(url.matches("\\w{5}"));
-        }
+        String url = service.generateRandomUrl();
+        assertTrue(url.matches("\\w{5}"));
     }
 }
