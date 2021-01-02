@@ -1,0 +1,3 @@
+spring.jpa.hibernate.ddl-auto=create
+config.logging-enabled=true
+config.api-cooldown=1
