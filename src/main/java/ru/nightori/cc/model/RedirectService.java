@@ -1,11 +1,11 @@
 package ru.nightori.cc.model;
 
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.nightori.cc.Config;
+import ru.nightori.cc.RandomGenerator;
 import ru.nightori.cc.exceptions.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,33 +22,44 @@ public class RedirectService {
 	@Autowired
 	BCryptPasswordEncoder encoder;
 
+	@Autowired
+	RandomGenerator generator;
+
 	public String createRedirect(String shortUrl, String destination, String password) {
 		// redirects to redirects are not allowed
 		if (destination.contains(APP_DOMAIN)) {
 			throw new RecursiveRedirectException("Recursive redirect to \""+destination+"\n");
 		}
 
-		// generate a random URL if the custom one was not provided
-		// if it was provided but it's not available, throw an error
-		if (shortUrl.isEmpty()) shortUrl = generateRandomUrl();
+		// generate a random URL if it wasn't set
+		// if it was set but it's not available, throw an error
+		if (shortUrl.isEmpty()) shortUrl = generator.getRandomUrl();
 		else if (Config.RESERVED_URLS.contains(shortUrl) || redirectRepository.existsByShortUrl(shortUrl)) {
 			throw new UrlNotAvailableException("\"" + shortUrl + "\" is not available");
 		}
 
-		// make a hash and store it instead of the password (obviously)
-		String encoded = password.isEmpty() ? null : encoder.encode(password);
-		Redirect redirect = new Redirect(shortUrl, destination, encoded);
+		// result is either "shortUrl" or "shortUrl;generatedPassword"
+		StringBuilder result = new StringBuilder(shortUrl);
+
+		// generate a password if it wasn't set
+		if (password.isEmpty()) {
+			password = generator.getRandomPassword();
+			result.append(";").append(password);
+		}
+
+		// create a redirect and store it
+		Redirect redirect = new Redirect(shortUrl, destination, encoder.encode(password));
 		redirectRepository.save(redirect);
-		return shortUrl;
+		return result.toString();
 	}
 
 	public void deleteRedirect(String shortUrl, String password) {
 		// get the requested redirect and if it doesn't exist, throw an error
 		Optional<Redirect> redirectOptional = redirectRepository.findByShortUrl(shortUrl);
 		Redirect redirect = redirectOptional.orElseThrow(EntityNotFoundException::new);
-		// if the passwords don't match or if it wasn't set in the first place...
-		// yeah, you guessed it - throw an error
-		if (redirect.getPassword() == null || !encoder.matches(password, redirect.getPassword())) {
+
+		// if the password hashes don't match, throw an error
+		if (!encoder.matches(password, redirect.getPassword())) {
 			throw new WrongPasswordException("Wrong password for \""+shortUrl+"\"");
 		}
 		else {
@@ -62,16 +73,6 @@ public class RedirectService {
 		// if it doesn't exist, redirect to main page instead
 		Optional<Redirect> redirectOpt = redirectRepository.findByShortUrl(shortUrl);
 		return redirectOpt.isPresent() ? redirectOpt.get().getDestination() : "/home";
-	}
-
-	// generate a random URL and make sure it's unique
-	public String generateRandomUrl() {
-		String url;
-		do {
-			url = RandomString.make(Config.GENERATED_URL_LENGTH);
-		}
-		while (redirectRepository.existsByShortUrl(url));
-		return url;
 	}
 
 }

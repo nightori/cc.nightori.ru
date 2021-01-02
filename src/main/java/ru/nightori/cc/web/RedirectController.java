@@ -11,7 +11,6 @@ import ru.nightori.cc.exceptions.IllegalHeaderException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import static ru.nightori.cc.Config.APP_DOMAIN;
@@ -44,8 +43,8 @@ public class RedirectController {
 	@PostMapping(path="/api")
 	public String createRedirect(
 			HttpServletRequest request,
-			@RequestParam @NotNull @Pattern(regexp = "^[A-Za-z0-9\\-_]*$") String shortUrl,
-			@RequestParam @NotNull @Pattern(regexp = "^https?://[^\\s]+$") String destination,
+			@RequestParam @Pattern(regexp = "^[A-Za-z0-9\\-_]*$") String shortUrl,
+			@RequestParam @Pattern(regexp = "^https?://[^\\s]+$") String destination,
 			@RequestParam @Pattern(regexp = "^[A-Za-z0-9]*$") String password
 	) {
 		String ip = getIpAddress(request);
@@ -61,7 +60,7 @@ public class RedirectController {
 	@DeleteMapping(path="/api")
 	public void deleteRedirect(
 			HttpServletRequest request,
-			@RequestParam @NotNull @Pattern(regexp = "^[A-Za-z0-9\\-_]+$") String shortUrl,
+			@RequestParam @Pattern(regexp = "^[A-Za-z0-9\\-_]+$") String shortUrl,
 			@RequestParam @Pattern(regexp = "^[A-Za-z0-9]+$") String password
 	) {
 		String ip = getIpAddress(request);

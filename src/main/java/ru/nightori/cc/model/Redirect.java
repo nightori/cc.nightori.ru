@@ -17,7 +17,7 @@ public class Redirect {
 	@Pattern(regexp = "^https?://[^\\s]+$")
 	private String destination;
 
-	// can be null and store anything, it's encoded anyway
+	@NotNull
 	private String password;
 
 	// empty default constructor to let Spring magic work

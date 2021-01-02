@@ -26,7 +26,7 @@ class PersistenceTests {
 
     @BeforeEach
     void setUp() {
-        Redirect redirect = new Redirect(TEST_SHORT_URL, TEST_DESTINATION,null);
+        Redirect redirect = new Redirect(TEST_SHORT_URL, TEST_DESTINATION,"123");
         entityManager.persist(redirect);
         entityManager.flush();
     }

@@ -1,6 +1,5 @@
 package ru.nightori.cc;
 
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +35,9 @@ class RedirectServiceTests {
 
     @MockBean
     BCryptPasswordEncoder mockedPasswordEncoder;
+
+    @MockBean
+    RandomGenerator generator;
 
     @Test
     void createRedirectTestSuccess() {
@@ -84,19 +86,19 @@ class RedirectServiceTests {
 
     @Test
     void deleteRedirectTestAccessDenied() {
-        Redirect redirect = new Redirect("google", "https://google.com", null);
+        Redirect redirect = new Redirect("google", "https://google.com", "123");
         when(mockedRepository.findByShortUrl(anyString())).thenReturn(Optional.of(redirect));
-        when(mockedPasswordEncoder.matches(anyString(), anyString())).thenReturn(true);
+        when(mockedPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
         assertThrows(
                 WrongPasswordException.class,
-                () -> service.deleteRedirect("google", "123")
+                () -> service.deleteRedirect("google", "456")
         );
     }
 
     @Test
     void getRedirectUrlTestSuccess() {
-        Redirect redirect = new Redirect("google", "https://google.com", null);
+        Redirect redirect = new Redirect("google", "https://google.com", "123");
         when(mockedRepository.findByShortUrl(anyString())).thenReturn(Optional.of(redirect));
 
         String destination = service.getRedirectUrl(redirect.getShortUrl());
@@ -111,9 +113,4 @@ class RedirectServiceTests {
         assertEquals("/home", destination);
     }
 
-    @RepeatedTest(10)
-    void generateRandomUrlTests() {
-        String url = service.generateRandomUrl();
-        assertTrue(url.matches("\\w{5}"));
-    }
 }
