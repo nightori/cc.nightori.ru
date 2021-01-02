@@ -25,8 +25,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			DataIntegrityViolationException.class
 	})
 	protected ResponseEntity<Object> handleValidationError(RuntimeException ex, WebRequest request) {
-		String msg = "invalid request";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	// 403 - wrong password
@@ -34,8 +33,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			WrongPasswordException.class
 	})
 	protected ResponseEntity<Object> handleAccessError(RuntimeException ex, WebRequest request) {
-		String msg = "access denied";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
 	}
 
 	// 404 - requested entry not found
@@ -43,8 +41,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			EntityNotFoundException.class
 	})
 	protected ResponseEntity<Object> handleNotFoundError(RuntimeException ex, WebRequest request) {
-		String msg = "not found";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
 	// 418 - recursive redirect
@@ -52,8 +49,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			RecursiveRedirectException.class
 	})
 	protected ResponseEntity<Object> handleRecursiveError(RuntimeException ex, WebRequest request) {
-		String msg = "recursive redirect";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.I_AM_A_TEAPOT, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.I_AM_A_TEAPOT, request);
 	}
 
 	// 422 - duplicate IDs or other SQL error
@@ -61,8 +57,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			UrlNotAvailableException.class
 	})
 	protected ResponseEntity<Object> handleSqlError(RuntimeException ex, WebRequest request) {
-		String msg = "sql error";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
 	}
 
 	// 429 - too many requests
@@ -70,8 +65,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 			LimitExceededException.class
 	})
 	protected ResponseEntity<Object> handleLimitError(RuntimeException ex, WebRequest request) {
-		String msg = "too many requests";
-		return handleExceptionInternal(ex, msg, new HttpHeaders(), HttpStatus.TOO_MANY_REQUESTS, request);
+		return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.TOO_MANY_REQUESTS, request);
 	}
 
 }
