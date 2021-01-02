@@ -3,9 +3,9 @@ package ru.nightori.cc.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.nightori.cc.Config;
 import ru.nightori.cc.model.RedirectService;
 import ru.nightori.cc.exceptions.IllegalHeaderException;
 
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Pattern;
 
-import static ru.nightori.cc.Config.APP_DOMAIN;
+import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 
 //	this is intended to be run behind a reverse proxy
 //	that's why clients IPs are obtained by reading 'x-forwarded-for' header
@@ -28,6 +28,10 @@ public class RedirectController {
 
 	@Autowired
     ClientCacheService clientCacheService;
+
+	// logging for all creation and deletion operations
+	@Value("${config.logging-enabled}")
+	boolean LOGGING_ENABLED;
 
 	static final Logger logger = LoggerFactory.getLogger(RedirectController.class);
 
@@ -50,7 +54,7 @@ public class RedirectController {
 		String ip = getIpAddress(request);
 		clientCacheService.tryAccess(ip);
 		String url = redirectService.createRedirect(shortUrl, destination, password);
-		if (Config.LOGGING_ENABLED) {
+		if (LOGGING_ENABLED) {
 			logger.info("Created: \"" + url + "\" ["+ip+"]");
 		}
 		return "https://" + APP_DOMAIN + "/" + url;
@@ -66,7 +70,7 @@ public class RedirectController {
 		String ip = getIpAddress(request);
 		clientCacheService.tryAccess(ip);
 		redirectService.deleteRedirect(shortUrl, password);
-		if (Config.LOGGING_ENABLED) {
+		if (LOGGING_ENABLED) {
 			logger.info("Deleted: \"" + shortUrl + "\" ["+ip+"]");
 		}
 	}
@@ -78,15 +82,9 @@ public class RedirectController {
 			@PathVariable("url") String url,
 			HttpServletResponse httpServletResponse
 	) {
-		// reserved URLs should not be treated as redirects
-		if (Config.RESERVED_URLS.contains(url)) {
-			httpServletResponse.setStatus(404);
-		}
-		else {
-			String location = redirectService.getRedirectUrl(url);
-			httpServletResponse.setHeader("Location", location);
-			httpServletResponse.setStatus(302);
-		}
+		String location = redirectService.getRedirectUrl(url);
+		httpServletResponse.setHeader("Location", location);
+		httpServletResponse.setStatus(302);
 	}
 
 	// helper function to get client's IP address

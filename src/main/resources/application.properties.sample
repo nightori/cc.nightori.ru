@@ -1,5 +1,5 @@
 server.port=7777
-spring.main.banner-mode=off
+spring.main.banner-mode=OFF
 spring.jpa.hibernate.ddl-auto=none
 spring.jpa.open-in-view=false
 spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/cc?useUnicode=yes&characterEncoding=UTF-8
@@ -7,3 +7,5 @@ spring.datasource.username=USERNAME
 spring.datasource.password=PASSWORD
 spring.cache.jcache.config=classpath:redirectCacheConfig.xml
 logging.pattern.console=%d{HH:mm:ss} %-6level %msg%n
+config.logging-enabled=true
+config.api-cooldown=10

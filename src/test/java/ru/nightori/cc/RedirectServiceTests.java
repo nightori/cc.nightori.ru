@@ -20,7 +20,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ru.nightori.cc.Config.APP_DOMAIN;
+import static ru.nightori.cc.CcApplication.APP_DOMAIN;
+import static ru.nightori.cc.model.RedirectService.RESERVED_URLS;
 
 @SpringBootTest(classes = RedirectService.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -110,6 +111,12 @@ class RedirectServiceTests {
         when(mockedRepository.findByShortUrl(anyString())).thenReturn(Optional.empty());
 
         String destination = service.getRedirectUrl("google");
+        assertEquals("/home", destination);
+    }
+
+    @Test
+    void getRedirectUrlTestReserved() {
+        String destination = service.getRedirectUrl(RESERVED_URLS.get(0));
         assertEquals("/home", destination);
     }
 

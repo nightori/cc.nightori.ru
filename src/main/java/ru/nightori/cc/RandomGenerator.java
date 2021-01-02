@@ -10,6 +10,14 @@ import java.util.Random;
 @Service
 public class RandomGenerator {
 
+    // generated URLs have fixed length set by this constant
+    // 5 alphanumeric characters mean 62^5 possibilities
+    // that's around a billion so should be enough
+    public static final int GENERATED_URL_LENGTH = 5;
+
+    // the length of auto-generated numeric password
+    public static final int GENERATED_PASSWORD_LENGTH = 4;
+
     @Autowired
     RedirectRepository redirectRepository;
 
@@ -17,7 +25,7 @@ public class RandomGenerator {
     public String getRandomUrl() {
         String url;
         do {
-            url = RandomString.make(Config.GENERATED_URL_LENGTH);
+            url = RandomString.make(GENERATED_URL_LENGTH);
         }
         while (redirectRepository.existsByShortUrl(url));
         return url;
@@ -26,7 +34,8 @@ public class RandomGenerator {
     // generate a random numeric password
     public String getRandomPassword() {
         Random random = new Random();
-        int password = random.nextInt(9999) + 1;
+        int bound = (int) (Math.pow(10, GENERATED_PASSWORD_LENGTH) - 1);
+        int password = random.nextInt(bound) + 1;
         return String.format("%04d", password);
     }
 

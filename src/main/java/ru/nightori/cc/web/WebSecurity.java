@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.nightori.cc.Config;
+import ru.nightori.cc.CcApplication;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,12 +30,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	CorsConfigurationSource corsConfigurationSource() {
 		// allow all origins in dev mode
 		List<String> env = Arrays.asList(environment.getActiveProfiles());
-		String origins = (env.contains("dev")) ? "*" : "https://"+ Config.APP_DOMAIN;
+		String origins = (env.contains("dev")) ? "*" : "https://"+ CcApplication.APP_DOMAIN;
 
 		// set everything and register the configuration
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Collections.singletonList(origins));
-		configuration.setAllowedMethods(Config.ALLOWED_METHODS);
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;

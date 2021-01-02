@@ -1,19 +1,20 @@
 package ru.nightori.cc;
 
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.nightori.cc.exceptions.LimitExceededException;
 import ru.nightori.cc.web.ClientCacheService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// not annotated, we don't need Spring context for this
-class ClientCacheServiceTests {
-    ClientCacheService service;
+@SpringBootTest(classes = ClientCacheService.class,
+        webEnvironment = SpringBootTest.WebEnvironment.NONE)
 
-    @BeforeEach
-    void setUp() {
-        service = new ClientCacheService();
-    }
+class ClientCacheServiceTests {
+
+    @Autowired
+    ClientCacheService service;
 
     @Test
     void grantedTest() {
@@ -25,8 +26,8 @@ class ClientCacheServiceTests {
 
     @Test
     void deniedTest() {
-        service.tryAccess("127.0.0.1");
+        service.tryAccess("1.2.3.4");
         // this IP is in the cache, so an exception must be thrown
-        assertThrows(LimitExceededException.class, () -> service.tryAccess("127.0.0.1"));
+        assertThrows(LimitExceededException.class, () -> service.tryAccess("1.2.3.4"));
     }
 }

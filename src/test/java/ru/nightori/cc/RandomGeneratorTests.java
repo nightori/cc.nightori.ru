@@ -9,6 +9,8 @@ import ru.nightori.cc.model.RedirectRepository;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static ru.nightori.cc.RandomGenerator.GENERATED_PASSWORD_LENGTH;
+import static ru.nightori.cc.RandomGenerator.GENERATED_URL_LENGTH;
 
 @SpringBootTest(classes = RandomGenerator.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -25,13 +27,13 @@ public class RandomGeneratorTests {
     void generateRandomUrlTests() {
         when(mockedRepository.existsByShortUrl(anyString())).thenReturn(false);
         String url = generator.getRandomUrl();
-        assertTrue(url.matches("\\w{5}"));
+        assertTrue(url.matches("\\w{" + GENERATED_URL_LENGTH + "}"));
     }
 
     @RepeatedTest(10)
     void generateRandomPasswordTests() {
         String password = generator.getRandomPassword();
-        assertTrue(password.matches("\\d{4}"));
+        assertTrue(password.matches("\\d{" + GENERATED_PASSWORD_LENGTH + "}"));
     }
 
 }

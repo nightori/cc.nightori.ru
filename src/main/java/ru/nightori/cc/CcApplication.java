@@ -10,7 +10,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableCaching
 public class CcApplication {
 
-	// declaring bCrypt here to have it available for injection when we need it
+    // URL of the deployed web-application
+    // it's used to limit request origins in production
+    public final static String APP_DOMAIN = "cc.nightori.ru";
+
+    // declaring bCrypt here to have it available for injection when we need it
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){
 		return new BCryptPasswordEncoder();

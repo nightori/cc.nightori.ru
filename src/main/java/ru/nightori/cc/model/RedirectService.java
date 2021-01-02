@@ -4,19 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.nightori.cc.Config;
 import ru.nightori.cc.RandomGenerator;
 import ru.nightori.cc.exceptions.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static ru.nightori.cc.Config.APP_DOMAIN;
+import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 
 @Service
 public class RedirectService {
 
-	@Autowired
+    // special URLs that are not available for redirect creation
+    public final static List<String> RESERVED_URLS = Arrays.asList("home", "api");
+
+    @Autowired
 	RedirectRepository redirectRepository;
 
 	@Autowired
@@ -34,7 +38,7 @@ public class RedirectService {
 		// generate a random URL if it wasn't set
 		// if it was set but it's not available, throw an error
 		if (shortUrl.isEmpty()) shortUrl = generator.getRandomUrl();
-		else if (Config.RESERVED_URLS.contains(shortUrl) || redirectRepository.existsByShortUrl(shortUrl)) {
+		else if (RESERVED_URLS.contains(shortUrl) || redirectRepository.existsByShortUrl(shortUrl)) {
 			throw new UrlNotAvailableException("\"" + shortUrl + "\" is not available");
 		}
 
@@ -70,7 +74,10 @@ public class RedirectService {
 	// get destination URL from redirect url
 	@Cacheable("redirectCache")
 	public String getRedirectUrl(String shortUrl) {
-		// if it doesn't exist, redirect to main page instead
+		// reserved URLs get redirected to the main page
+		if (RESERVED_URLS.contains(shortUrl)) return "/home";
+
+		// nonexistent URLs get redirected to the main page as well
 		Optional<Redirect> redirectOpt = redirectRepository.findByShortUrl(shortUrl);
 		return redirectOpt.isPresent() ? redirectOpt.get().getDestination() : "/home";
 	}

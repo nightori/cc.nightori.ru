@@ -15,8 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.nightori.cc.Config.APP_DOMAIN;
-import static ru.nightori.cc.Config.RESERVED_URLS;
+import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 
 @WebMvcTest(RedirectController.class)
 class WebLayerTests {
@@ -67,12 +66,6 @@ class WebLayerTests {
         mockMvc.perform(get("/randomUrl"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", expectedURL));
-    }
-
-    @Test
-    void urlRedirectTestReserved() throws Exception {
-        String reservedUrl = "/" + RESERVED_URLS.get(0);
-        mockMvc.perform(get(reservedUrl)).andExpect(status().isNotFound());
     }
 
     @Test
