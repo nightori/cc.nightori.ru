@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.nightori.cc.exception.RecursiveRedirectException;
-import ru.nightori.cc.exception.UrlNotAvailableException;
-import ru.nightori.cc.exception.WrongPasswordException;
+import ru.nightori.cc.exceptions.RecursiveRedirectException;
+import ru.nightori.cc.exceptions.UrlNotAvailableException;
+import ru.nightori.cc.exceptions.WrongPasswordException;
+import ru.nightori.cc.model.Redirect;
+import ru.nightori.cc.model.RedirectRepository;
+import ru.nightori.cc.model.RedirectService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -18,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ru.nightori.cc.config.Config.APP_DOMAIN;
+import static ru.nightori.cc.Config.APP_DOMAIN;
 
 @SpringBootTest(classes = RedirectService.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE)

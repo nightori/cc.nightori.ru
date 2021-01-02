@@ -1,4 +1,4 @@
-package ru.nightori.cc.exception;
+package ru.nightori.cc.exceptions;
 
 // custom exception for recursive redirects
 public class RecursiveRedirectException extends RuntimeException {

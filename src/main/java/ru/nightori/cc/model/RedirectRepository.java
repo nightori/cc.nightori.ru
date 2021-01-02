@@ -1,4 +1,4 @@
-package ru.nightori.cc;
+package ru.nightori.cc.model;
 
 import org.springframework.data.repository.CrudRepository;
 

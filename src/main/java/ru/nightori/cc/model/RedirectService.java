@@ -1,17 +1,17 @@
-package ru.nightori.cc;
+package ru.nightori.cc.model;
 
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.nightori.cc.config.Config;
-import ru.nightori.cc.exception.*;
+import ru.nightori.cc.Config;
+import ru.nightori.cc.exceptions.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static ru.nightori.cc.config.Config.APP_DOMAIN;
+import static ru.nightori.cc.Config.APP_DOMAIN;
 
 @Service
 public class RedirectService {

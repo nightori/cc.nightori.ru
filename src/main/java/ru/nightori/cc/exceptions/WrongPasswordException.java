@@ -1,4 +1,4 @@
-package ru.nightori.cc.exception;
+package ru.nightori.cc.exceptions;
 
 // custom exception for when the password is wrong
 public class WrongPasswordException extends RuntimeException {

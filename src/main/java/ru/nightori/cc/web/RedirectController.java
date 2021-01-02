@@ -1,19 +1,20 @@
-package ru.nightori.cc;
+package ru.nightori.cc.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.nightori.cc.config.Config;
-import ru.nightori.cc.exception.IllegalHeaderException;
+import ru.nightori.cc.Config;
+import ru.nightori.cc.model.RedirectService;
+import ru.nightori.cc.exceptions.IllegalHeaderException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import static ru.nightori.cc.config.Config.APP_DOMAIN;
+import static ru.nightori.cc.Config.APP_DOMAIN;
 
 //	this is intended to be run behind a reverse proxy
 //	that's why clients IPs are obtained by reading 'x-forwarded-for' header
@@ -27,7 +28,7 @@ public class RedirectController {
 	RedirectService redirectService;
 
 	@Autowired
-	ClientCacheService clientCacheService;
+    ClientCacheService clientCacheService;
 
 	static final Logger logger = LoggerFactory.getLogger(RedirectController.class);
 

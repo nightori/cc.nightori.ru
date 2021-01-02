@@ -1,4 +1,4 @@
-package ru.nightori.cc.exception;
+package ru.nightori.cc.exceptions;
 
 // custom exception for when IP header is tampered with
 public class IllegalHeaderException extends RuntimeException {

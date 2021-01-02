@@ -1,4 +1,4 @@
-package ru.nightori.cc.config;
+package ru.nightori.cc.web;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.nightori.cc.exception.*;
+import ru.nightori.cc.exceptions.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.RollbackException;

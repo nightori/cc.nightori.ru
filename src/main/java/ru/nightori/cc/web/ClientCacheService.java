@@ -1,4 +1,4 @@
-package ru.nightori.cc;
+package ru.nightori.cc.web;
 
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
@@ -9,9 +9,9 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
 import org.ehcache.config.units.MemoryUnit;
 import org.springframework.stereotype.Service;
-import ru.nightori.cc.exception.LimitExceededException;
+import ru.nightori.cc.exceptions.LimitExceededException;
 
-import static ru.nightori.cc.config.Config.API_COOLDOWN;
+import static ru.nightori.cc.Config.API_COOLDOWN;
 
 // this service is used to limit API requests per second
 // default limitation: 1 request per second from one IP

@@ -1,7 +1,8 @@
 package ru.nightori.cc;
 
 import org.junit.jupiter.api.*;
-import ru.nightori.cc.exception.LimitExceededException;
+import ru.nightori.cc.exceptions.LimitExceededException;
+import ru.nightori.cc.web.ClientCacheService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

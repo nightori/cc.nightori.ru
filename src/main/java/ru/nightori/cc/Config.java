@@ -1,4 +1,4 @@
-package ru.nightori.cc.config;
+package ru.nightori.cc;
 
 import java.time.Duration;
 import java.util.Arrays;
