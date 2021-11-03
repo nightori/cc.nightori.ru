@@ -2,38 +2,44 @@ package ru.nightori.cc;
 
 import org.junit.jupiter.api.RepeatedTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.nightori.cc.model.RedirectRepository;
+import ru.nightori.cc.service.RandomGeneratorService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static ru.nightori.cc.RandomGenerator.GENERATED_PASSWORD_LENGTH;
-import static ru.nightori.cc.RandomGenerator.GENERATED_URL_LENGTH;
 
-@SpringBootTest(classes = RandomGenerator.class,
+@SpringBootTest(classes = RandomGeneratorService.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 
-public class RandomGeneratorTests {
+public class RandomGeneratorServiceTest {
 
     @Autowired
-    RandomGenerator generator;
+	RandomGeneratorService generator;
 
     @MockBean
-    RedirectRepository mockedRepository;
+    RedirectRepository mockRepository;
 
-    @RepeatedTest(10)
+    @Value("${config.generator.url.length}")
+    private int generatedUrlLength;
+
+    @Value("${config.generator.password.length}")
+    private int generatedPasswordLength;
+
+    @RepeatedTest(5)
     void generateRandomUrlTests() {
-        when(mockedRepository.existsByShortUrl(anyString())).thenReturn(false);
+        when(mockRepository.existsByShortUrl(anyString())).thenReturn(false);
         String url = generator.getRandomUrl();
-        assertTrue(url.matches("\\w{" + GENERATED_URL_LENGTH + "}"));
+        assertTrue(url.matches("\\w{" + generatedUrlLength + "}"));
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(5)
     void generateRandomPasswordTests() {
         String password = generator.getRandomPassword();
-        assertTrue(password.matches("\\d{" + GENERATED_PASSWORD_LENGTH + "}"));
+        assertTrue(password.matches("\\d{" + generatedPasswordLength + "}"));
     }
 
 }

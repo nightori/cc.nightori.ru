@@ -1,20 +1,21 @@
 package ru.nightori.cc.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.nightori.cc.exceptions.IllegalHeaderException;
+import ru.nightori.cc.service.ClientCacheService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
+@RequiredArgsConstructor
 public class RequestRateLimiter implements WebMvcConfigurer {
 
-    @Autowired
-    ClientCacheService service;
+	private final ClientCacheService service;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -22,7 +23,7 @@ public class RequestRateLimiter implements WebMvcConfigurer {
         registry.addInterceptor(new HandlerInterceptor() {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-                // try to add the IP to the service's cache, if it succeeds - nothing will happen
+                // try to add the IP address to the service's cache, if it succeeds - nothing will happen
                 // if it fails - LimitExceededException will be thrown and handled elsewhere
                 service.tryAccess(getIP(request));
                 return true;
@@ -39,7 +40,7 @@ public class RequestRateLimiter implements WebMvcConfigurer {
             // this is a way to detect header tampering
             // if everything's legit, there should be only 2 IPs here
             if (ips.length != 2) {
-                throw new IllegalHeaderException("Illegal ip header: "+ip);
+                throw new IllegalHeaderException("Illegal IP header: " + ip);
             }
 
             // the first one belongs to the client

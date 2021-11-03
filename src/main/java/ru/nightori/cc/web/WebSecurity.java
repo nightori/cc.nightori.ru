@@ -1,11 +1,12 @@
 package ru.nightori.cc.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -16,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	Environment environment;
+	private final Environment environment;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -30,7 +31,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	CorsConfigurationSource corsConfigurationSource() {
 		// allow all origins in dev mode
 		List<String> env = Arrays.asList(environment.getActiveProfiles());
-		String origins = (env.contains("dev")) ? "*" : "https://"+ CcApplication.APP_DOMAIN;
+		String origins = (env.contains("dev")) ? "*" : "https://" + CcApplication.APP_DOMAIN;
 
 		// set everything and register the configuration
 		CorsConfiguration configuration = new CorsConfiguration();
@@ -39,6 +40,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+		return new BCryptPasswordEncoder();
 	}
 
 }

@@ -1,4 +1,4 @@
-package ru.nightori.cc.web;
+package ru.nightori.cc.service;
 
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
@@ -15,7 +15,7 @@ import ru.nightori.cc.exceptions.LimitExceededException;
 import java.time.Duration;
 
 // this service is used to limit API requests per second
-// default limitation: 1 request per second from one IP
+// default limitation: 1 request per second from one IP address
 
 @Service
 public class ClientCacheService {
@@ -44,9 +44,9 @@ public class ClientCacheService {
 
 	// when a client sends a request
 	public void tryAccess(String ip) {
-		// check if the client's ip is in the cache
+		// check if the client's IP address is in the cache
 		if (cache.containsKey(ip)) {
-			// it is: the limit is exceeded, error 492 is thrown
+			// it is: the limit is exceeded, error 429 is thrown
 			throw new LimitExceededException("Too many requests from " + ip);
 		}
 		// it isn't: access granted, put it in the cache

@@ -1,11 +1,18 @@
 package ru.nightori.cc.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Redirect {
 
 	@Id
@@ -19,39 +26,5 @@ public class Redirect {
 
 	@NotNull
 	private String password;
-
-	// empty default constructor to let Spring magic work
-	public Redirect() {}
-
-	// constructor to set all fields quickly because setters are lame
-	public Redirect(String shortUrl, String destination, String password) {
-		this.shortUrl = shortUrl;
-		this.destination = destination;
-		this.password = password;
-	}
-
-	public String getShortUrl() {
-		return shortUrl;
-	}
-
-	public void setShortUrl(String shortUrl) {
-		this.shortUrl = shortUrl;
-	}
-
-	public String getDestination() {
-		return destination;
-	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 }

@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.nightori.cc.model.RedirectService;
-import ru.nightori.cc.web.ClientCacheService;
+import ru.nightori.cc.service.RedirectService;
+import ru.nightori.cc.service.ClientCacheService;
 import ru.nightori.cc.web.RedirectController;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -18,16 +18,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 
 @WebMvcTest(RedirectController.class)
-class WebLayerTests {
+class WebTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    RedirectService mockedClientService;
+    RedirectService mockClientService;
 
     @MockBean
-    ClientCacheService mockedCacheService;
+    ClientCacheService mockCacheService;
 
     @Test
     void homeRedirectTest() throws Exception {
@@ -46,7 +46,8 @@ class WebLayerTests {
                 .param("password", "12345"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expected));
-        verify(mockedClientService).createRedirect(any(), any(), any());
+
+        verify(mockClientService).createRedirect(any(), any(), any());
     }
 
     @Test
@@ -55,13 +56,14 @@ class WebLayerTests {
                 .param("shortUrl", "google")
                 .param("password", "12345"))
                 .andExpect(status().isOk());
-        verify(mockedClientService).deleteRedirect(any(), any());
+
+        verify(mockClientService).deleteRedirect(any(), any());
     }
 
     @Test
     void urlRedirectTestSuccess() throws Exception {
         String expectedURL = "https://example.com";
-        when(mockedClientService.getRedirectUrl(anyString())).thenReturn(expectedURL);
+        when(mockClientService.getRedirectUrl(anyString())).thenReturn(expectedURL);
 
         mockMvc.perform(get("/randomUrl"))
                 .andExpect(status().is3xxRedirection())

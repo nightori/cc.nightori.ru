@@ -1,3 +1,5 @@
 spring.jpa.hibernate.ddl-auto=create
+config.generator.url.length=5
+config.generator.password.length=4
 config.logging-enabled=true
 config.api-cooldown=1

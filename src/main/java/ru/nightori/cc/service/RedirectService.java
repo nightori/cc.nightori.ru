@@ -1,48 +1,46 @@
-package ru.nightori.cc.model;
+package ru.nightori.cc.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.nightori.cc.RandomGenerator;
 import ru.nightori.cc.exceptions.*;
+import ru.nightori.cc.model.Redirect;
+import ru.nightori.cc.model.RedirectRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 
 @Service
+@RequiredArgsConstructor
 public class RedirectService {
 
     // special URLs that are not available for redirect creation
-    public final static List<String> RESERVED_URLS = Arrays.asList("home", "api");
+    public final static Set<String> RESERVED_URLS = Set.of("home", "api");
 
-    @Autowired
-	RedirectRepository redirectRepository;
-
-	@Autowired
-	BCryptPasswordEncoder encoder;
-
-	@Autowired
-	RandomGenerator generator;
+	private final RedirectRepository redirectRepository;
+	private final BCryptPasswordEncoder encoder;
+	private final RandomGeneratorService generator;
 
 	public String createRedirect(String shortUrl, String destination, String password) {
 		// redirects to redirects are not allowed
 		if (destination.contains(APP_DOMAIN)) {
-			throw new RecursiveRedirectException("Recursive redirect to \""+destination+"\n");
+			throw new RecursiveRedirectException("Recursive redirect to \"" + destination + "\n");
 		}
 
 		// generate a random URL if it wasn't set
-		// if it was set but it's not available, throw an error
-		if (shortUrl.isEmpty()) shortUrl = generator.getRandomUrl();
+		if (shortUrl.isEmpty()) {
+			shortUrl = generator.getRandomUrl();
+		}
+		// if it was set but it's unavailable, throw an error
 		else if (RESERVED_URLS.contains(shortUrl) || redirectRepository.existsByShortUrl(shortUrl)) {
 			throw new UrlNotAvailableException("\"" + shortUrl + "\" is not available");
 		}
 
-		// result is either "shortUrl" or "shortUrl;generatedPassword"
+		// result will be either "shortUrl" or "shortUrl;generatedPassword"
 		StringBuilder result = new StringBuilder(shortUrl);
 
 		// generate a password if it wasn't set
@@ -58,20 +56,20 @@ public class RedirectService {
 	}
 
 	public void deleteRedirect(String shortUrl, String password) {
-		// get the requested redirect and if it doesn't exist, throw an error
+		// get the target redirect (and if it doesn't exist, throw an error)
 		Optional<Redirect> redirectOptional = redirectRepository.findByShortUrl(shortUrl);
 		Redirect redirect = redirectOptional.orElseThrow(EntityNotFoundException::new);
 
-		// if the password hashes don't match, throw an error
-		if (!encoder.matches(password, redirect.getPassword())) {
-			throw new WrongPasswordException("Wrong password for \""+shortUrl+"\"");
+		// check the password
+		if (encoder.matches(password, redirect.getPassword())) {
+			redirectRepository.deleteById(shortUrl);
 		}
 		else {
-			redirectRepository.deleteById(shortUrl);
+			throw new WrongPasswordException("Wrong password for \"" + shortUrl + "\"");
 		}
 	}
 
-	// get destination URL from redirect url
+	// get a destination URL from a redirect URL
 	@Cacheable("redirectCache")
 	public String getRedirectUrl(String shortUrl) {
 		// reserved URLs get redirected to the main page
