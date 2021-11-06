@@ -15,32 +15,32 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class PersistenceTest {
 
-    private final String TEST_SHORT_URL = "google";
-    private final String TEST_DESTINATION = "https://google.com";
+	private final String TEST_SHORT_URL = "google";
+	private final String TEST_DESTINATION = "https://google.com";
 
-    @Autowired
-    TestEntityManager entityManager;
+	@Autowired
+	TestEntityManager entityManager;
 
-    @Autowired
-    RedirectRepository redirectRepository;
+	@Autowired
+	RedirectRepository redirectRepository;
 
-    @BeforeEach
-    void setUp() {
-        Redirect redirect = new Redirect(TEST_SHORT_URL, TEST_DESTINATION, "123");
-        entityManager.persist(redirect);
-        entityManager.flush();
-    }
+	@BeforeEach
+	void setUp() {
+		Redirect redirect = new Redirect(TEST_SHORT_URL, TEST_DESTINATION, "123");
+		entityManager.persist(redirect);
+		entityManager.flush();
+	}
 
-    @Test
-    void findByShortUrlTest() {
-        Optional<Redirect> opt = redirectRepository.findByShortUrl(TEST_SHORT_URL);
-        assertTrue(opt.isPresent());
-        assertEquals(TEST_DESTINATION, opt.get().getDestination());
-    }
+	@Test
+	void findByShortUrlTest() {
+		Optional<Redirect> opt = redirectRepository.findByShortUrl(TEST_SHORT_URL);
+		assertTrue(opt.isPresent());
+		assertEquals(TEST_DESTINATION, opt.get().getDestination());
+	}
 
-    @Test
-    void existsByShortUrlTest() {
-        boolean exists = redirectRepository.existsByShortUrl(TEST_SHORT_URL);
-        assertTrue(exists);
-    }
+	@Test
+	void existsByShortUrlTest() {
+		boolean exists = redirectRepository.existsByShortUrl(TEST_SHORT_URL);
+		assertTrue(exists);
+	}
 }

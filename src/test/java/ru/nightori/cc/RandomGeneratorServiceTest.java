@@ -13,33 +13,33 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = RandomGeneratorService.class,
-        webEnvironment = SpringBootTest.WebEnvironment.NONE)
+		webEnvironment = SpringBootTest.WebEnvironment.NONE)
 
 public class RandomGeneratorServiceTest {
 
-    @Autowired
+	@Autowired
 	RandomGeneratorService generator;
 
-    @MockBean
-    RedirectRepository mockRepository;
+	@MockBean
+	RedirectRepository mockRepository;
 
-    @Value("${config.generator.url.length}")
-    private int generatedUrlLength;
+	@Value("${config.generator.url.length}")
+	private int generatedUrlLength;
 
-    @Value("${config.generator.password.length}")
-    private int generatedPasswordLength;
+	@Value("${config.generator.password.length}")
+	private int generatedPasswordLength;
 
-    @RepeatedTest(5)
-    void generateRandomUrlTests() {
-        when(mockRepository.existsByShortUrl(anyString())).thenReturn(false);
-        String url = generator.getRandomUrl();
-        assertTrue(url.matches("\\w{" + generatedUrlLength + "}"));
-    }
+	@RepeatedTest(5)
+	void generateRandomUrlTests() {
+		when(mockRepository.existsByShortUrl(anyString())).thenReturn(false);
+		String url = generator.getRandomUrl();
+		assertTrue(url.matches("\\w{" + generatedUrlLength + "}"));
+	}
 
-    @RepeatedTest(5)
-    void generateRandomPasswordTests() {
-        String password = generator.getRandomPassword();
-        assertTrue(password.matches("\\d{" + generatedPasswordLength + "}"));
-    }
+	@RepeatedTest(5)
+	void generateRandomPasswordTests() {
+		String password = generator.getRandomPassword();
+		assertTrue(password.matches("\\d{" + generatedPasswordLength + "}"));
+	}
 
 }

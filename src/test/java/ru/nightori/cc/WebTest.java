@@ -20,62 +20,62 @@ import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 @WebMvcTest(RedirectController.class)
 class WebTest {
 
-    @Autowired
-    MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
-    @MockBean
-    RedirectService mockClientService;
+	@MockBean
+	RedirectService mockClientService;
 
-    @MockBean
-    ClientCacheService mockCacheService;
+	@MockBean
+	ClientCacheService mockCacheService;
 
-    @Test
-    void homeRedirectTest() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(header().string("Location", "/home"));
-    }
+	@Test
+	void homeRedirectTest() throws Exception {
+		mockMvc.perform(get("/"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(header().string("Location", "/home"));
+	}
 
-    @Test
-    void createRedirectTest() throws Exception {
-        String expected = String.format("https://%s/null", APP_DOMAIN);
+	@Test
+	void createRedirectTest() throws Exception {
+		String expected = String.format("https://%s/null", APP_DOMAIN);
 
-        mockMvc.perform(post("/api")
-                .param("shortUrl", "google")
-                .param("destination", "https://google.com")
-                .param("password", "12345"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(expected));
+		mockMvc.perform(post("/api")
+				.param("shortUrl", "google")
+				.param("destination", "https://google.com")
+				.param("password", "12345"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(expected));
 
-        verify(mockClientService).createRedirect(any(), any(), any());
-    }
+		verify(mockClientService).createRedirect(any(), any(), any());
+	}
 
-    @Test
-    void deleteRedirectTest() throws Exception {
-        mockMvc.perform(delete("/api")
-                .param("shortUrl", "google")
-                .param("password", "12345"))
-                .andExpect(status().isOk());
+	@Test
+	void deleteRedirectTest() throws Exception {
+		mockMvc.perform(delete("/api")
+				.param("shortUrl", "google")
+				.param("password", "12345"))
+				.andExpect(status().isOk());
 
-        verify(mockClientService).deleteRedirect(any(), any());
-    }
+		verify(mockClientService).deleteRedirect(any(), any());
+	}
 
-    @Test
-    void urlRedirectTestSuccess() throws Exception {
-        String expectedURL = "https://example.com";
-        when(mockClientService.getRedirectUrl(anyString())).thenReturn(expectedURL);
+	@Test
+	void urlRedirectTestSuccess() throws Exception {
+		String expectedURL = "https://example.com";
+		when(mockClientService.getRedirectUrl(anyString())).thenReturn(expectedURL);
 
-        mockMvc.perform(get("/randomUrl"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(header().string("Location", expectedURL));
-    }
+		mockMvc.perform(get("/randomUrl"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(header().string("Location", expectedURL));
+	}
 
-    @Test
-    void illegalHeaderTest() throws Exception {
-        mockMvc.perform(delete("/api")
-                .param("shortUrl", "google")
-                .param("password", "12345")
-                .header("x-forwarded-for", "127.0.0.1"))
-                .andExpect(status().isBadRequest());
-    }
+	@Test
+	void illegalHeaderTest() throws Exception {
+		mockMvc.perform(delete("/api")
+				.param("shortUrl", "google")
+				.param("password", "12345")
+				.header("x-forwarded-for", "127.0.0.1"))
+				.andExpect(status().isBadRequest());
+	}
 }

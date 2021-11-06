@@ -18,8 +18,8 @@ import static ru.nightori.cc.CcApplication.APP_DOMAIN;
 @RequiredArgsConstructor
 public class RedirectService {
 
-    // special URLs that are not available for redirect creation
-    public final static Set<String> RESERVED_URLS = Set.of("home", "api");
+	// special URLs that are not available for redirect creation
+	public final static Set<String> RESERVED_URLS = Set.of("home", "api");
 
 	private final RedirectRepository redirectRepository;
 	private final BCryptPasswordEncoder encoder;

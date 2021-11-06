@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class CcApplication {
 
-    // domain name for the web application
-    public final static String APP_DOMAIN = "cc.nightori.ru";
+	// domain name for the web application
+	public final static String APP_DOMAIN = "cc.nightori.ru";
 
 	public static void main(String[] args) {
 		SpringApplication.run(CcApplication.class, args);
